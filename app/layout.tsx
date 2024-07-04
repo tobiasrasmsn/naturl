@@ -4,6 +4,7 @@ import "./globals.css";
 import Navigation from "@/components/shared/Navigation";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
+import Footer from "@/components/shared/Footer";
 
 const pjs = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
                     {/* <Navigation /> */}
                     {children}
                     <Toaster />
+                    <Footer />
                 </ThemeProvider>
             </body>
         </html>
