@@ -93,10 +93,12 @@ export default function Home() {
     };
 
     async function handleCopy(content: string) {
-        await navigator.clipboard.writeText(content);
-        toast.success("Copied to clipboard", {
-            description: "The short URL has been copied to your clipboard.",
-        });
+        if (shortUrl) {
+            await navigator.clipboard.writeText(content);
+            toast.success("Copied to clipboard", {
+                description: "The short URL has been copied to your clipboard.",
+            });
+        }
     }
     return (
         <main className="">
@@ -158,7 +160,7 @@ export default function Home() {
                             className="h-6 w-6 text-zinc-300"
                             color="#d4d4d8"
                         />
-                        <AlertTitle className="text-zinc-300 text-base ml-2">
+                        <AlertTitle className="text-zinc-300 text-base ml-3">
                             {shortUrl
                                 ? shortUrl
                                 : "Your link will appear here."}
