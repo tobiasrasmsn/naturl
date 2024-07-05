@@ -5,14 +5,17 @@ import MagicInput from "@/components/ui/magic-input";
 import Spline from "@splinetool/react-spline";
 import Image from "next/image";
 import { FormEvent, useState } from "react";
-import { CgSpinnerAlt } from "react-icons/cg";
+import { CgSpinnerAlt, CgTerminal } from "react-icons/cg";
 import { toast } from "sonner";
 import ReactConfetti from "react-confetti";
 import { useWindowSize } from "react-use";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { FaLink } from "react-icons/fa6";
 export default function Home() {
     const [isLoading, setIsLoading] = useState(true);
     const [url, setUrl] = useState("");
     const [shortCode, setShortCode] = useState("");
+    const [shortUrl, setShortUrl] = useState("");
     const [step, setStep] = useState(1);
     const [isUrlLoading, setIsUrlLoading] = useState(false);
     const [showConfetti, setShowConfetti] = useState(false);
@@ -52,12 +55,8 @@ export default function Home() {
 
             if (data.success) {
                 const shortUrl = `${window.location.origin}/${data.shortCode}`;
-                await navigator.clipboard.writeText(shortUrl);
-                toast.success("Copied to clipboard", {
-                    description:
-                        data.message ||
-                        "The short URL has been copied to your clipboard.",
-                });
+                handleCopy(shortUrl);
+                setShortUrl(shortUrl);
                 setShowConfetti(true);
                 setTimeout(() => setShowConfetti(false), 5000);
             } else {
@@ -92,6 +91,13 @@ export default function Home() {
             setShortCode("");
         }
     };
+
+    async function handleCopy(content: string) {
+        await navigator.clipboard.writeText(content);
+        toast.success("Copied to clipboard", {
+            description: "The short URL has been copied to your clipboard.",
+        });
+    }
     return (
         <main className="">
             <section className="w-full h-[100dvh] min-h-[500px] flex flex-col justify-center items-center gap-5 ">
@@ -114,7 +120,7 @@ export default function Home() {
                                 <Button
                                     type="button"
                                     onClick={handleNext}
-                                    className="bg-zinc-700/25 transition-colors duration-300 backdrop-blur-2xl border w-full sm:w-[126.95px] text-indigo-100 border-indigo-400/45 hover:opacity-100 hover:bg-indigo-600 hover:border-indigo-400 flex flex-row justify-center items-center gap-3"
+                                    className="bg-purple-700/45 transition-colors duration-300 backdrop-blur-2xl border w-full sm:w-[126.95px] text-purple-100 border-purple-400/45 hover:opacity-100 hover:bg-purple-700 hover:border-purple-400 flex flex-row justify-center items-center gap-3"
                                 >
                                     Next
                                 </Button>
@@ -144,6 +150,20 @@ export default function Home() {
                             </div>
                         )}
                     </form>
+                    <div
+                        onClick={() => handleCopy(shortUrl)}
+                        className="flex flex-row items-center p-3 rounded-md w-full bg-zinc-700/25 backdrop-blur-2xl border border-zinc-600/50 cursor-pointer"
+                    >
+                        <FaLink
+                            className="h-6 w-6 text-zinc-300"
+                            color="#d4d4d8"
+                        />
+                        <AlertTitle className="text-zinc-300 text-base ml-2">
+                            {shortUrl
+                                ? shortUrl
+                                : "Your link will appear here."}
+                        </AlertTitle>
+                    </div>
                 </div>
 
                 <div className="absolute w-full h-full bg-zinc-950/70 pointer-events-none"></div>

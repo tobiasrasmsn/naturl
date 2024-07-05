@@ -9,10 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@braintree/sanitize-url": "^7.0.4",
+    "@googleapis/safebrowsing": "^10.0.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@splinetool/react-spline": "^4.0.0",
+    "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "csv-parser": "^3.0.0",
     "framer-motion": "^11.2.12",
     "limiter": "^2.1.0",
     "lucide-react": "^0.400.0",

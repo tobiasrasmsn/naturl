@@ -2,15 +2,22 @@ import { NextResponse } from "next/server";
 import { getClient } from "@/lib/db";
 import { z } from "zod";
 import { RateLimiter } from "limiter";
+import { sanitizeUrl } from "@braintree/sanitize-url";
 
-const limiter = new RateLimiter({
-    tokensPerInterval: 4,
+// Rate limiting per minute
+const IP_LIMIT = 4;
+const GLOBAL_LIMIT = 50;
+
+const globalLimiter = new RateLimiter({
+    tokensPerInterval: GLOBAL_LIMIT,
     interval: "minute",
     fireImmediately: true,
 });
 
+const ipLimiters = new Map<string, RateLimiter>();
+
 const urlSchema = z.object({
-    url: z.string().url().max(2000),
+    url: z.string().url().max(2000).transform(sanitizeUrl),
     shortCode: z
         .string()
         .regex(/^[a-zA-Z0-9_-]{1,20}$/, {
@@ -18,22 +25,46 @@ const urlSchema = z.object({
                 "Short code must be 1-20 characters and can only contain letters, numbers, underscores, and hyphens",
         })
         .optional()
-        .or(z.literal("")),
+        .or(z.literal(""))
+        .transform((val) => (val ? val.toLowerCase() : val)),
 });
 
-const MAX_RETRIES = 10; // Maximum number of attempts to generate a unique short code. Because the code generation is not truly random, there is a higher possibility of collisions.
+const MAX_RETRIES = 10;
 
 export async function POST(request: Request) {
     const client = await getClient();
     try {
-        const remainingRequests = await limiter.removeTokens(1);
-        if (remainingRequests < 0) {
-            return NextResponse.json(
+        const remainingGlobalRequests = await globalLimiter.removeTokens(1);
+        if (remainingGlobalRequests < 0) {
+            return createSecureResponse(
                 {
                     success: false,
-                    error: "Rate limit exceeded. Please try again later.",
+                    error: "Global rate limit exceeded. Please try again later.",
                 },
-                { status: 429 }
+                429
+            );
+        }
+
+        const ip = request.headers.get("x-forwarded-for") || "unknown";
+        if (!ipLimiters.has(ip)) {
+            ipLimiters.set(
+                ip,
+                new RateLimiter({
+                    tokensPerInterval: IP_LIMIT,
+                    interval: "minute",
+                    fireImmediately: true,
+                })
+            );
+        }
+        const ipLimiter = ipLimiters.get(ip)!;
+        const remainingIpRequests = await ipLimiter.removeTokens(1);
+        if (remainingIpRequests < 0) {
+            return createSecureResponse(
+                {
+                    success: false,
+                    error: "IP-based rate limit exceeded. Please try again later.",
+                },
+                429
             );
         }
 
@@ -53,12 +84,13 @@ export async function POST(request: Request) {
                     : null;
         } catch (error) {
             if (error instanceof z.ZodError) {
-                const issues = error.issues
-                    .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
-                    .join(", ");
-                return NextResponse.json(
-                    { success: false, error: `Validation error: ${issues}` },
-                    { status: 400 }
+                console.error("Validation error:", error.issues);
+                return createSecureResponse(
+                    {
+                        success: false,
+                        error: "Invalid input. Please check your URL and short code.",
+                    },
+                    400
                 );
             }
             throw error;
@@ -74,7 +106,7 @@ export async function POST(request: Request) {
 
             if (existingUrl.rows.length > 0) {
                 await client.query("COMMIT");
-                return NextResponse.json({
+                return createSecureResponse({
                     success: true,
                     shortCode: existingUrl.rows[0].short_code,
                     message:
@@ -98,12 +130,12 @@ export async function POST(request: Request) {
                 console.error(
                     "Failed to generate a unique short code after maximum retries"
                 );
-                return NextResponse.json(
+                return createSecureResponse(
                     {
                         success: false,
                         error: "Unable to generate a unique short code. Please try again.",
                     },
-                    { status: 500 }
+                    500
                 );
             }
         } else {
@@ -113,14 +145,39 @@ export async function POST(request: Request) {
             );
 
             if (existingCode.rows.length > 0) {
-                await client.query("COMMIT");
-                return NextResponse.json({
-                    success: true,
-                    shortCode: shortCode,
-                    message:
-                        "Your short link is ready - it was already created earlier.",
-                });
+                if (existingCode.rows[0].original_url === url) {
+                    await client.query("COMMIT");
+                    return createSecureResponse({
+                        success: true,
+                        shortCode: shortCode,
+                        message:
+                            "Your short link is ready - it was already created earlier.",
+                    });
+                } else {
+                    await client.query("ROLLBACK");
+                    return createSecureResponse(
+                        {
+                            success: false,
+                            error: "This custom short code is already in use. Please choose a different one.",
+                        },
+                        409
+                    );
+                }
             }
+        }
+
+        const existingUrl = await client.query(
+            "SELECT short_code FROM urls WHERE original_url = $1 AND is_custom = false",
+            [url]
+        );
+
+        if (existingUrl.rows.length > 0 && !isCustomShortCode) {
+            await client.query("COMMIT");
+            return createSecureResponse({
+                success: true,
+                shortCode: existingUrl.rows[0].short_code,
+                message: "A short link for this URL already exists.",
+            });
         }
 
         await client.query(
@@ -130,7 +187,7 @@ export async function POST(request: Request) {
 
         await client.query("COMMIT");
 
-        return NextResponse.json({
+        return createSecureResponse({
             success: true,
             shortCode: shortCode,
             message: "Short URL created successfully.",
@@ -138,23 +195,12 @@ export async function POST(request: Request) {
     } catch (error) {
         await client.query("ROLLBACK");
         console.error("Error in POST function:", error);
-        let errorMessage = "An unexpected error occurred. Please try again.";
-        let statusCode = 500;
-
-        if (error instanceof Error) {
-            switch (error.message) {
-                case "Database connection error":
-                    errorMessage =
-                        "Unable to connect to the database. Please try again later.";
-                    break;
-                default:
-                    errorMessage = `Error creating short URL: ${error.message}`;
-            }
-        }
-
-        return NextResponse.json(
-            { success: false, error: errorMessage },
-            { status: statusCode }
+        return createSecureResponse(
+            {
+                success: false,
+                error: "An unexpected error occurred. Please try again.",
+            },
+            500
         );
     } finally {
         client.release();
@@ -162,7 +208,6 @@ export async function POST(request: Request) {
 }
 
 function generateUniqueCode(): string {
-    // A more random code generation function can be used here.
     const characters =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     const codeLength = 6;
@@ -174,3 +219,20 @@ function generateUniqueCode(): string {
     }
     return result;
 }
+
+function createSecureResponse(
+    body: object,
+    status: number = 200
+): NextResponse {
+    const response = NextResponse.json(body, { status });
+    response.headers.set(
+        "Strict-Transport-Security",
+        "max-age=31536000; includeSubDomains"
+    );
+    response.headers.set("X-Content-Type-Options", "nosniff");
+    response.headers.set("X-Frame-Options", "DENY");
+    response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    return response;
+}
+
+// TODO: Add a function that checks if the URL is malicious or not
