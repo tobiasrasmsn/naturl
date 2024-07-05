@@ -4,7 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
 import Footer from "@/components/shared/Footer";
-
+import { Analytics } from "@vercel/analytics/react";
 const pjs = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -29,6 +29,7 @@ export default function RootLayout({
                     {children}
                     <Toaster className="opacity-75" />
                     <Footer />
+                    <Analytics />
                 </ThemeProvider>
             </body>
         </html>
