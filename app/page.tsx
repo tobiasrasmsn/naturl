@@ -57,7 +57,11 @@ export default function Home() {
                 const shortUrl = `${window.location.origin}/${data.shortCode}`;
                 setCurrentShortUrl(shortUrl);
                 setShowConfetti(true);
-                handleCopy(shortUrl);
+                await navigator.clipboard.writeText(shortUrl);
+                toast.success("Copied to clipboard", {
+                    description:
+                        "The short URL has been copied to your clipboard.",
+                });
                 setTimeout(() => setShowConfetti(false), 5000);
             } else {
                 if (response.status === 429) {
@@ -92,9 +96,9 @@ export default function Home() {
         }
     };
 
-    async function handleCopy(content: string) {
+    async function handleCopy() {
         if (currentShortUrl) {
-            await navigator.clipboard.writeText(content);
+            await navigator.clipboard.writeText(currentShortUrl);
             toast.success("Copied to clipboard", {
                 description: "The short URL has been copied to your clipboard.",
             });
@@ -153,7 +157,7 @@ export default function Home() {
                         )}
                     </form>
                     <div
-                        onClick={() => handleCopy(currentShortUrl)}
+                        onClick={handleCopy}
                         className="flex flex-row items-center p-3 rounded-md w-full bg-zinc-700/25 backdrop-blur-2xl border border-zinc-600/50 cursor-pointer"
                     >
                         <FaLink
