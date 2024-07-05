@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import Navigation from "@/components/shared/Navigation";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
 import Footer from "@/components/shared/Footer";
@@ -9,7 +8,7 @@ import Footer from "@/components/shared/Footer";
 const pjs = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Naturl",
+    title: "Naturl | URL Shortener",
     description: "Shortening URLs has never been easier.",
 };
 
@@ -28,7 +27,7 @@ export default function RootLayout({
                 >
                     {/* <Navigation /> */}
                     {children}
-                    <Toaster />
+                    <Toaster className="opacity-75" />
                     <Footer />
                 </ThemeProvider>
             </body>

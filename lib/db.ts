@@ -1,4 +1,4 @@
-import { Pool, QueryResult } from "pg";
+import { Pool, PoolClient, QueryResult } from "pg";
 
 let pool: Pool;
 
@@ -19,4 +19,11 @@ export async function query(
         throw new Error("Cannot use database client in browser");
     }
     return pool.query(text, params);
+}
+
+export async function getClient(): Promise<PoolClient> {
+    if (!pool) {
+        throw new Error("Cannot use database client in browser");
+    }
+    return pool.connect();
 }

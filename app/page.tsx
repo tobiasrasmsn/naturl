@@ -1,8 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import GradientInput from "@/components/ui/gradient-input";
-import { Input } from "@/components/ui/input";
 import MagicInput from "@/components/ui/magic-input";
 import Spline from "@splinetool/react-spline";
 import Image from "next/image";
@@ -14,9 +12,29 @@ import { useWindowSize } from "react-use";
 export default function Home() {
     const [isLoading, setIsLoading] = useState(true);
     const [url, setUrl] = useState("");
+    const [shortCode, setShortCode] = useState("");
+    const [step, setStep] = useState(1);
     const [isUrlLoading, setIsUrlLoading] = useState(false);
     const [showConfetti, setShowConfetti] = useState(false);
     const { width, height } = useWindowSize();
+    const handleNext = (e: FormEvent) => {
+        e.preventDefault();
+        if (isValidUrl(url)) {
+            setStep(2);
+        } else {
+            toast.error("Please enter a valid URL", {
+                description: "The URL should start with http:// or https://",
+            });
+        }
+    };
+    const isValidUrl = (string: string): boolean => {
+        try {
+            new URL(string);
+            return true;
+        } catch (_) {
+            return false;
+        }
+    };
     const shortenUrl = async (e: FormEvent) => {
         e.preventDefault();
         try {
@@ -26,31 +44,52 @@ export default function Home() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ url }),
+                body: JSON.stringify({ url, shortCode }),
             });
 
             const data = await response.json();
             console.log("Response data:", data);
 
-            if (data.success && data.shortCode) {
+            if (data.success) {
                 const shortUrl = `${window.location.origin}/${data.shortCode}`;
                 await navigator.clipboard.writeText(shortUrl);
                 toast.success("Copied to clipboard", {
                     description:
+                        data.message ||
                         "The short URL has been copied to your clipboard.",
                 });
-                setShowConfetti(true); // Trigger confetti
-                setTimeout(() => setShowConfetti(false), 5000); // Stop confetti after 5 seconds
+                setShowConfetti(true);
+                setTimeout(() => setShowConfetti(false), 5000);
             } else {
-                throw new Error(data.error || "Failed to create short URL");
+                if (response.status === 429) {
+                    toast.error("Rate limit exceeded", {
+                        description: "Please try again later.",
+                    });
+                } else if (response.status === 400) {
+                    toast.error("Invalid input", {
+                        description:
+                            data.error ||
+                            "Please check your input and try again.",
+                    });
+                } else {
+                    toast.error("Error", {
+                        description:
+                            data.error ||
+                            "Failed to create short URL. Please try again.",
+                    });
+                }
             }
         } catch (error) {
             console.error("Error", error);
-            toast.error("Error", {
-                description: "Failed to create short URL. Please try again.",
+            toast.error("Network error", {
+                description:
+                    "Failed to connect to the server. Please check your internet connection and try again.",
             });
         } finally {
             setIsUrlLoading(false);
+            setStep(1);
+            setUrl("");
+            setShortCode("");
         }
     };
     return (
@@ -61,38 +100,49 @@ export default function Home() {
                         Naturally short, <br />
                         Perfectly linked.
                     </h1>
-                    <form
-                        onSubmit={shortenUrl}
-                        className="flex flex-col sm:flex-row items-center gap-2 w-full"
-                    >
-                        {/* <Input
-                            type="url"
-                            placeholder="Long url here..."
-                            value={url}
-                            onChange={(e) => setUrl(e.target.value)}
-                            required
-                            className="bg-zinc-900/55 backdrop-blur-sm text-zinc-300 border border-zinc-800/65 focus-visible:outline-none focus-visible:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
-                        ></Input> */}
-
-                        <MagicInput
-                            type="url"
-                            placeholder="Long URL here..."
-                            value={url}
-                            onChange={(e) => setUrl(e.target.value)}
-                            required
-                            className="w-full"
-                        />
-
-                        <Button
-                            type="submit"
-                            className="bg-zinc-700/25 transition-colors duration-300 backdrop-blur-xl border w-full sm:w-[126.95px] text-indigo-100 border-indigo-400/45 hover:opacity-100 hover:bg-indigo-600 hover:border-indigo-400 flex flex-row justify-center items-center gap-3"
-                        >
-                            {isUrlLoading ? (
-                                <CgSpinnerAlt className="text-zinc-100 animate-spin" />
-                            ) : (
-                                "Shorten"
-                            )}
-                        </Button>
+                    <form className="flex flex-col items-center gap-2 w-full">
+                        {step === 1 ? (
+                            <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
+                                <MagicInput
+                                    type="url"
+                                    placeholder="Long URL here..."
+                                    value={url}
+                                    onChange={(e) => setUrl(e.target.value)}
+                                    required
+                                    className="w-full"
+                                />
+                                <Button
+                                    type="button"
+                                    onClick={handleNext}
+                                    className="bg-zinc-700/25 transition-colors duration-300 backdrop-blur-2xl border w-full sm:w-[126.95px] text-indigo-100 border-indigo-400/45 hover:opacity-100 hover:bg-indigo-600 hover:border-indigo-400 flex flex-row justify-center items-center gap-3"
+                                >
+                                    Next
+                                </Button>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
+                                <MagicInput
+                                    type="text"
+                                    placeholder="Custom short code (optional)"
+                                    value={shortCode}
+                                    onChange={(e) =>
+                                        setShortCode(e.target.value)
+                                    }
+                                    className="w-full"
+                                />
+                                <Button
+                                    type="submit"
+                                    onClick={shortenUrl}
+                                    className="bg-zinc-700/25 transition-colors duration-300 backdrop-blur-2xl border w-full sm:w-[126.95px] text-indigo-100 border-indigo-400/45 hover:opacity-100 hover:bg-indigo-600 hover:border-indigo-400 flex flex-row justify-center items-center gap-3"
+                                >
+                                    {isUrlLoading ? (
+                                        <CgSpinnerAlt className="text-zinc-100 animate-spin" />
+                                    ) : (
+                                        "Shorten"
+                                    )}
+                                </Button>
+                            </div>
+                        )}
                     </form>
                 </div>
 
