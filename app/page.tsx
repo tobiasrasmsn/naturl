@@ -105,10 +105,10 @@ export default function Home() {
         }
     }
     return (
-        <main className=''>
+        <main className='bg-zinc-900/25'>
             <section className='w-full h-[100dvh] min-h-[500px] flex flex-col justify-center items-center gap-5 '>
                 <div className='flex flex-col justify-center items-center gap-5 absolute z-30 '>
-                    <h1 className='text-4xl leading-[36px] md:leading-[1] lg:leading-[1] md:text-5xl lg:text-6xl font-semibold text-center text-zinc-100'>
+                    <h1 className='text-[10vw] leading-[10vw] md:leading-[1] lg:leading-[1] md:text-5xl lg:text-6xl font-semibold text-center text-zinc-100'>
                         Naturally short, <br />
                         Perfectly linked.
                     </h1>
@@ -156,20 +156,6 @@ export default function Home() {
                             </div>
                         )}
                     </form>
-                    <div
-                        onClick={handleCopy}
-                        className='flex flex-row items-center p-3 rounded-md w-full bg-zinc-700/25 backdrop-blur-2xl border border-zinc-600/50 cursor-pointer'
-                    >
-                        <FaLink
-                            className='h-6 w-6 text-zinc-300'
-                            color='#d4d4d8'
-                        />
-                        <AlertTitle className='text-zinc-300 text-base ml-3'>
-                            {currentShortUrl
-                                ? currentShortUrl
-                                : 'Your link will appear here.'}
-                        </AlertTitle>
-                    </div>
                 </div>
             </section>
             {showConfetti && (
