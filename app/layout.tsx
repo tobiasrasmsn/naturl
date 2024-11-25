@@ -25,9 +25,8 @@ export default function RootLayout({
                     defaultTheme='dark'
                     disableTransitionOnChange
                 >
-                    {/* <Navigation /> */}
                     {children}
-                    <Toaster className='opacity-75' />
+                    <Toaster richColors />
                     <Footer />
                     <Analytics />
                 </ThemeProvider>

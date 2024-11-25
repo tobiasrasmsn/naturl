@@ -2,14 +2,11 @@
 
 import { Button } from '@/components/ui/button';
 import MagicInput from '@/components/ui/magic-input';
-import Spline from '@splinetool/react-spline';
-import Image from 'next/image';
 import { FormEvent, useState } from 'react';
 import { CgSpinnerAlt, CgTerminal } from 'react-icons/cg';
 import { toast } from 'sonner';
 import ReactConfetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { FaLink } from 'react-icons/fa6';
 export default function Home() {
     const [isLoading, setIsLoading] = useState(true);
@@ -58,10 +55,7 @@ export default function Home() {
                 setCurrentShortUrl(shortUrl);
                 setShowConfetti(true);
                 await navigator.clipboard.writeText(shortUrl);
-                toast.success('Copied to clipboard', {
-                    description:
-                        'The short URL has been copied to your clipboard.',
-                });
+                toast.success('Copied to clipboard');
                 setTimeout(() => setShowConfetti(false), 5000);
             } else {
                 if (response.status === 429) {
@@ -90,9 +84,6 @@ export default function Home() {
             });
         } finally {
             setIsUrlLoading(false);
-            setStep(1);
-            setUrl('');
-            setShortCode('');
         }
     };
 
@@ -104,56 +95,95 @@ export default function Home() {
             });
         }
     }
+    const resetStates = () => {
+        setUrl('');
+        setShortCode('');
+        setCurrentShortUrl('');
+        setStep(1);
+    };
     return (
         <main className='bg-zinc-900/25'>
             <section className='w-full h-[100dvh] min-h-[500px] flex flex-col justify-center items-center gap-5 '>
                 <div className='flex flex-col justify-center items-center gap-5 absolute z-30 '>
-                    <h1 className='text-[10vw] leading-[10vw] md:leading-[1] lg:leading-[1] md:text-5xl lg:text-6xl font-semibold text-center text-zinc-100'>
+                    <h1 className='text-[10vw] leading-[10vw] md:leading-[1] lg:leading-[1] md:text-6xl lg:text-7xl font-semibold text-center text-zinc-100'>
                         Naturally short, <br />
                         Perfectly linked.
                     </h1>
                     <form className='flex flex-col items-center gap-2 w-full'>
-                        {step === 1 ? (
-                            <div className='flex flex-col sm:flex-row items-center gap-2 w-full'>
-                                <MagicInput
-                                    type='url'
-                                    placeholder='Long URL here...'
-                                    value={url}
-                                    onChange={(e) => setUrl(e.target.value)}
-                                    required
-                                    className='w-full'
-                                />
-                                <Button
+                        {currentShortUrl ? (
+                            <>
+                                <div className='flex flex-col sm:flex-row items-center gap-2 w-full'>
+                                    <MagicInput
+                                        type='text'
+                                        value={currentShortUrl}
+                                        readOnly
+                                        onClick={handleCopy}
+                                        className='w-full cursor-pointer'
+                                    />
+                                    <Button
+                                        type='button'
+                                        onClick={handleCopy}
+                                        className='bg-purple-700/45 transition-colors duration-300 backdrop-blur-2xl h-[50px] text-base border w-full sm:w-[126.95px] text-purple-100 border-purple-400/45 hover:opacity-100 hover:bg-purple-700 hover:border-purple-400 flex flex-row justify-center items-center gap-3'
+                                    >
+                                        <FaLink className='' /> Copy
+                                    </Button>
+                                </div>
+                                <button
                                     type='button'
-                                    onClick={handleNext}
-                                    className='bg-purple-700/45 transition-colors duration-300 backdrop-blur-2xl border w-full sm:w-[126.95px] text-purple-100 border-purple-400/45 hover:opacity-100 hover:bg-purple-700 hover:border-purple-400 flex flex-row justify-center items-center gap-3'
+                                    onClick={resetStates}
+                                    className='absolute -bottom-8 text-zinc-400 text-sm hover:text-zinc-200 transition-colors'
                                 >
-                                    Next
-                                </Button>
-                            </div>
+                                    Create new
+                                </button>
+                            </>
                         ) : (
-                            <div className='flex flex-col sm:flex-row items-center gap-2 w-full'>
-                                <MagicInput
-                                    type='text'
-                                    placeholder='Custom short code (optional)'
-                                    value={shortCode}
-                                    onChange={(e) =>
-                                        setShortCode(e.target.value)
-                                    }
-                                    className='w-full'
-                                />
-                                <Button
-                                    type='submit'
-                                    onClick={shortenUrl}
-                                    className='bg-zinc-700/25 transition-colors duration-300 backdrop-blur-2xl border w-full sm:w-[126.95px] text-indigo-100 border-indigo-400/45 hover:opacity-100 hover:bg-indigo-600 hover:border-indigo-400 flex flex-row justify-center items-center gap-3'
-                                >
-                                    {isUrlLoading ? (
-                                        <CgSpinnerAlt className='text-zinc-100 animate-spin' />
-                                    ) : (
-                                        'Shorten'
-                                    )}
-                                </Button>
-                            </div>
+                            <>
+                                {step === 1 ? (
+                                    <div className='flex flex-col sm:flex-row items-center gap-2 w-full'>
+                                        <MagicInput
+                                            type='url'
+                                            placeholder='Long URL here...'
+                                            value={url}
+                                            onChange={(e) =>
+                                                setUrl(e.target.value)
+                                            }
+                                            required
+                                            className='w-full'
+                                        />
+                                        <Button
+                                            type='button'
+                                            onClick={handleNext}
+                                            className='bg-purple-700/45 transition-colors duration-300 backdrop-blur-2xl h-[50px] text-base border w-full sm:w-[126.95px] text-purple-100 border-purple-400/45 hover:opacity-100 hover:bg-purple-700 hover:border-purple-400 flex flex-row justify-center items-center gap-3'
+                                        >
+                                            Next
+                                        </Button>
+                                    </div>
+                                ) : (
+                                    <div className='flex flex-col sm:flex-row items-center gap-2 w-full'>
+                                        <MagicInput
+                                            type='text'
+                                            placeholder='Custom short code (optional)'
+                                            value={shortCode}
+                                            onChange={(e) =>
+                                                setShortCode(e.target.value)
+                                            }
+                                            maxLength={15}
+                                            className='w-full'
+                                        />
+                                        <Button
+                                            type='submit'
+                                            onClick={shortenUrl}
+                                            className='bg-purple-700/45 transition-colors duration-300 backdrop-blur-2xl border h-[50px] text-base w-full sm:w-[126.95px] text-purple-100 border-purple-400/45 hover:opacity-100 hover:bg-purple-700 hover:border-purple-400 flex flex-row justify-center items-center gap-3'
+                                        >
+                                            {isUrlLoading ? (
+                                                <CgSpinnerAlt className='text-zinc-100 animate-spin' />
+                                            ) : (
+                                                'Shorten'
+                                            )}
+                                        </Button>
+                                    </div>
+                                )}
+                            </>
                         )}
                     </form>
                 </div>
