@@ -4,6 +4,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from 'next-themes';
 import Footer from '@/components/shared/Footer';
+import Donate from '@/components/shared/donate';
 import { Analytics } from '@vercel/analytics/react';
 const pjs = Plus_Jakarta_Sans({ subsets: ['latin'] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
                     {children}
                     <Toaster richColors />
                     <Footer />
+                    <Donate />
                     <Analytics />
                 </ThemeProvider>
             </body>

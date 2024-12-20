@@ -102,7 +102,7 @@ export default function Home() {
         setStep(1);
     };
     return (
-        <main className='bg-zinc-900/25'>
+        <main className='bg-zinc-950'>
             <section className='w-full h-[100dvh] min-h-[500px] flex flex-col justify-center items-center gap-5 '>
                 <div className='flex flex-col justify-center items-center gap-5 absolute z-30 '>
                     <h1 className='text-[10vw] leading-[10vw] md:leading-[1] lg:leading-[1] md:text-6xl lg:text-7xl font-semibold text-center text-zinc-100'>
