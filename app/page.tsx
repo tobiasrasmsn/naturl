@@ -12,6 +12,7 @@ import AnimatedShinyText from '@/components/ui/animated-shiny-text';
 import { cn } from '@/lib/utils';
 import { ArrowRightIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
+
 export default function Home() {
     const [url, setUrl] = useState('');
     const [shortCode, setShortCode] = useState('');

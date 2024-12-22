@@ -11,6 +11,35 @@ const pjs = Plus_Jakarta_Sans({ subsets: ['latin'] });
 export const metadata: Metadata = {
     title: 'Naturl | URL Shortener',
     description: 'Shortening URLs has never been easier.',
+    keywords:
+        'url shortener, link shortener, short url, url shorter, link management, free url shortener, free link shortener, free short url, free url shorter, free link management',
+    openGraph: {
+        title: 'Naturl | URL Shortener',
+        description: 'Shortening URLs has never been easier.',
+        type: 'website',
+        url: 'https://www.naturl.link',
+        images: [
+            {
+                url: '/opengraph-image.jpg',
+                width: 1200,
+                height: 630,
+                alt: 'Naturl URL Shortener',
+            },
+        ],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Naturl | URL Shortener',
+        description: 'Shortening URLs has never been easier.',
+        images: ['/twitter-image.jpg'],
+    },
+    alternates: {
+        canonical: 'https://www.naturl.link',
+    },
+    robots: {
+        index: true,
+        follow: true,
+    },
 };
 
 export default function RootLayout({
