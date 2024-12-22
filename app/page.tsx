@@ -8,8 +8,11 @@ import { toast } from 'sonner';
 import ReactConfetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
 import { FaLink } from 'react-icons/fa6';
+import AnimatedShinyText from '@/components/ui/animated-shiny-text';
+import { cn } from '@/lib/utils';
+import { ArrowRightIcon } from '@radix-ui/react-icons';
+import Link from 'next/link';
 export default function Home() {
-    const [isLoading, setIsLoading] = useState(true);
     const [url, setUrl] = useState('');
     const [shortCode, setShortCode] = useState('');
     const [currentShortUrl, setCurrentShortUrl] = useState('');
@@ -105,7 +108,21 @@ export default function Home() {
         <main className='bg-zinc-950'>
             <section className='w-full h-[100dvh] min-h-[500px] flex flex-col justify-center items-center gap-5 '>
                 <div className='flex flex-col justify-center items-center gap-5 absolute z-30 '>
-                    <h1 className='text-[10vw] leading-[10vw] md:leading-[1] lg:leading-[1] md:text-6xl lg:text-7xl font-semibold text-center text-zinc-100'>
+                    <Link
+                        href='https://buymeacoffee.com/tobiasr'
+                        target='_blank'
+                        className={cn(
+                            'group rounded-full border border-black/5 bg-neutral-100 text-base text-white transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:border-white/5 dark:bg-neutral-900 dark:hover:bg-neutral-800'
+                        )}
+                    >
+                        <AnimatedShinyText className='inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400'>
+                            <span className='text-sm'>
+                                ✨ Support this project
+                            </span>
+                            <ArrowRightIcon className='ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5' />
+                        </AnimatedShinyText>
+                    </Link>
+                    <h1 className='text-[10vw] leading-[10vw] md:leading-[1] lg:leading-[1] md:text-4xl lg:text-5xl font-semibold text-center text-zinc-100'>
                         Naturally short, <br />
                         Perfectly linked.
                     </h1>
@@ -118,12 +135,14 @@ export default function Home() {
                                         value={currentShortUrl}
                                         readOnly
                                         onClick={handleCopy}
+                                        aria-label='Short URL'
                                         className='w-full cursor-pointer'
                                     />
                                     <Button
                                         type='button'
                                         onClick={handleCopy}
-                                        className='bg-purple-700/45 transition-colors duration-300 backdrop-blur-2xl h-[50px] text-base border w-full sm:w-[126.95px] text-purple-100 border-purple-400/45 hover:opacity-100 hover:bg-purple-700 hover:border-purple-400 flex flex-row justify-center items-center gap-3'
+                                        aria-label='Copy'
+                                        className='bg-purple-700/45 transition-colors duration-300 backdrop-blur-2xl h-[44px] text-sm border w-full sm:w-[126.95px] text-purple-100 border-purple-400/45 hover:opacity-100 hover:bg-purple-700 hover:border-purple-400 flex flex-row justify-center items-center gap-3'
                                     >
                                         <FaLink className='' /> Copy
                                     </Button>
@@ -131,6 +150,7 @@ export default function Home() {
                                 <button
                                     type='button'
                                     onClick={resetStates}
+                                    aria-label='Create new'
                                     className='absolute -bottom-8 text-zinc-400 text-sm hover:text-zinc-200 transition-colors'
                                 >
                                     Create new
@@ -148,12 +168,14 @@ export default function Home() {
                                                 setUrl(e.target.value)
                                             }
                                             required
+                                            aria-label='Long URL'
                                             className='w-full'
                                         />
                                         <Button
                                             type='button'
                                             onClick={handleNext}
-                                            className='bg-purple-700/45 transition-colors duration-300 backdrop-blur-2xl h-[50px] text-base border w-full sm:w-[126.95px] text-purple-100 border-purple-400/45 hover:opacity-100 hover:bg-purple-700 hover:border-purple-400 flex flex-row justify-center items-center gap-3'
+                                            aria-label='Next'
+                                            className='bg-purple-700/45 transition-colors duration-300 backdrop-blur-2xl h-[44px] text-sm border w-full sm:w-[126.95px] text-purple-100 border-purple-400/45 hover:opacity-100 hover:bg-purple-700 hover:border-purple-400 flex flex-row justify-center items-center gap-3'
                                         >
                                             Next
                                         </Button>
@@ -168,12 +190,14 @@ export default function Home() {
                                                 setShortCode(e.target.value)
                                             }
                                             maxLength={15}
+                                            aria-label='Custom short code'
                                             className='w-full'
                                         />
                                         <Button
                                             type='submit'
                                             onClick={shortenUrl}
-                                            className='bg-purple-700/45 transition-colors duration-300 backdrop-blur-2xl border h-[50px] text-base w-full sm:w-[126.95px] text-purple-100 border-purple-400/45 hover:opacity-100 hover:bg-purple-700 hover:border-purple-400 flex flex-row justify-center items-center gap-3'
+                                            aria-label='Shorten URL'
+                                            className='bg-purple-700/45 transition-colors duration-300 backdrop-blur-2xl border h-[44px] text-sm w-full sm:w-[126.95px] text-purple-100 border-purple-400/45 hover:opacity-100 hover:bg-purple-700 hover:border-purple-400 flex flex-row justify-center items-center gap-3'
                                         >
                                             {isUrlLoading ? (
                                                 <CgSpinnerAlt className='text-zinc-100 animate-spin' />
@@ -187,7 +211,14 @@ export default function Home() {
                         )}
                     </form>
                 </div>
+                <Link
+                    href='/terms'
+                    className='text-zinc-800 text-xs hover:text-zinc-200 transition-colors absolute bottom-8 left-1/2 -translate-x-1/2 text-center'
+                >
+                    By using Naturl, you agree to our Terms of Service
+                </Link>
             </section>
+
             {showConfetti && (
                 <div className='fixed inset-0 z-50 pointer-events-none'>
                     <ReactConfetti
