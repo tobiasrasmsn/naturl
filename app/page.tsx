@@ -42,16 +42,20 @@ export default function Home() {
         e.preventDefault();
         try {
             setIsUrlLoading(true);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
             const response = await fetch('/api/shorten', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ url, shortCode }),
+                signal: controller.signal,
             });
 
+            clearTimeout(timeoutId);
             const data = await response.json();
-            console.log('Response data:', data);
 
             if (data.success) {
                 const shortUrl = `${window.location.origin}/${data.shortCode}`;
@@ -80,6 +84,36 @@ export default function Home() {
                 }
             }
         } catch (error) {
+            // If it's a network error, check if the URL was actually created
+            if (error instanceof Error && error.name === 'TypeError') {
+                try {
+                    // Wait a moment before checking
+                    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+                    // Check if the URL exists
+                    const checkResponse = await fetch(`/api/check-url`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ url }),
+                    });
+
+                    const checkData = await checkResponse.json();
+                    if (checkData.exists) {
+                        const shortUrl = `${window.location.origin}/${checkData.shortCode}`;
+                        setCurrentShortUrl(shortUrl);
+                        setShowConfetti(true);
+                        await navigator.clipboard.writeText(shortUrl);
+                        toast.success('URL shortened successfully');
+                        setTimeout(() => setShowConfetti(false), 5000);
+                        return;
+                    }
+                } catch (_) {
+                    // If the check fails, show the original error
+                }
+            }
+
             console.error('Error', error);
             toast.error('Network error', {
                 description:
