@@ -21,7 +21,7 @@ export default function Donate() {
 
     return (
         <div className='p-4 md:p-0'>
-            <div className='fixed bottom-0 md:bottom-4 right-0 md:right-4 w-full md:w-[300px] bg-zinc-900 rounded-none md:rounded-lg shadow-lg p-4 border border-zinc-800 animate-fade-in z-[100]'>
+            <div className='fixed bottom-0 md:bottom-4 right-0 md:right-4 w-full md:w-[300px] bg-zinc-900 rounded-none md:rounded-lg shadow-lg p-4 border border-zinc-800 animate-fade-in z-[100] animate-gradient-border'>
                 <button
                     onClick={handleClose}
                     className='absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-lg'
@@ -36,8 +36,8 @@ export default function Donate() {
                     </h3>
                     <p className='text-xs text-zinc-400'>
                         This URL shortener is provided completely free, with no
-                        sign-up required. If you find it useful, consider buying
-                        me a coffee!
+                        sign-up required. If you find it useful, consider
+                        donating to support the development of this project.
                     </p>
                     <a
                         href='https://buymeacoffee.com/tobiasr'

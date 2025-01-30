@@ -95,3 +95,20 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #525252;
 }
+@keyframes gradient-border {
+    0% {
+        border-color: #8400ff;
+    }
+    50% {
+        border-color: #ff7e9c;
+    }
+    100% {
+        border-color: #8400ff;
+    }
+}
+
+.animate-gradient-border {
+    border-width: 2px;
+    border-style: solid;
+    animation: gradient-border 3s infinite;
+}

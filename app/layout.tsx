@@ -9,36 +9,23 @@ import { Analytics } from '@vercel/analytics/react';
 const pjs = Plus_Jakarta_Sans({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+    metadataBase: new URL('https://www.naturl.link'),
     title: 'Naturl | URL Shortener',
     description: 'Shortening URLs has never been easier.',
-    keywords:
-        'url shortener, link shortener, short url, url shorter, link management, free url shortener, free link shortener, free short url, free url shorter, free link management',
+    alternates: {
+        canonical: '/',
+        languages: {
+            'en-US': '/en-US',
+        },
+    },
     openGraph: {
-        title: 'Naturl | URL Shortener',
-        description: 'Shortening URLs has never been easier.',
-        type: 'website',
-        url: 'https://www.naturl.link',
-        images: [
-            {
-                url: '/opengraph-image.jpg',
-                width: 1200,
-                height: 630,
-                alt: 'Naturl URL Shortener',
-            },
-        ],
+        images: '/opengraph-image.jpg',
     },
     twitter: {
         card: 'summary_large_image',
         title: 'Naturl | URL Shortener',
         description: 'Shortening URLs has never been easier.',
         images: ['/twitter-image.jpg'],
-    },
-    alternates: {
-        canonical: 'https://www.naturl.link',
-    },
-    robots: {
-        index: true,
-        follow: true,
     },
 };
 
