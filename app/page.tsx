@@ -2,16 +2,24 @@
 
 import { Button } from '@/components/ui/button';
 import MagicInput from '@/components/ui/magic-input';
-import { FormEvent, useState } from 'react';
-import { CgSpinnerAlt, CgTerminal } from 'react-icons/cg';
+import { FormEvent, useState, useEffect } from 'react';
+import { CgCheckO, CgSpinnerAlt, CgTerminal } from 'react-icons/cg';
 import { toast } from 'sonner';
 import ReactConfetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
-import { FaLink } from 'react-icons/fa6';
+import { FaLink, FaHandshake, FaHandSparkles } from 'react-icons/fa6';
 import AnimatedShinyText from '@/components/ui/animated-shiny-text';
 import { cn } from '@/lib/utils';
-import { ArrowRightIcon } from '@radix-ui/react-icons';
+import {
+    ArrowRightIcon,
+    BoxIcon,
+    LockClosedIcon,
+    MagnifyingGlassIcon,
+} from '@radix-ui/react-icons';
 import Link from 'next/link';
+import Image from 'next/image';
+import { GlowingEffect } from '@/components/ui/glowing-effect';
+import { RxCross2 } from 'react-icons/rx';
 
 export default function Home() {
     const [url, setUrl] = useState('');
@@ -21,6 +29,18 @@ export default function Home() {
     const [isUrlLoading, setIsUrlLoading] = useState(false);
     const [showConfetti, setShowConfetti] = useState(false);
     const { width, height } = useWindowSize();
+    const [showSponsorBox, setShowSponsorBox] = useState(true);
+
+    useEffect(() => {
+        const isClosed = localStorage.getItem('sponsorBoxClosed') === 'true';
+        setShowSponsorBox(!isClosed);
+    }, []);
+
+    const handleCloseSponsorBox = () => {
+        setShowSponsorBox(false);
+        localStorage.setItem('sponsorBoxClosed', 'true');
+    };
+
     const handleNext = (e: FormEvent) => {
         e.preventDefault();
         if (isValidUrl(url)) {
@@ -211,13 +231,63 @@ export default function Home() {
                             </>
                         )}
                     </form>
+                    <Link
+                        href='/terms'
+                        className='text-zinc-800 text-xs hover:text-zinc-200 transition-colors text-center'
+                    >
+                        By using Naturl, you agree to our Terms of Service
+                    </Link>
                 </div>
-                <Link
-                    href='/terms'
-                    className='text-zinc-800 text-xs hover:text-zinc-200 transition-colors absolute bottom-8 left-1/2 -translate-x-1/2 text-center'
-                >
-                    By using Naturl, you agree to our Terms of Service
-                </Link>
+            </section>
+            <section className='w-full hidden lg:block'>
+                <div className='bg-zinc-900/20 p-8 border-y border-zinc-800 flex flex-col items-center justify-center gap-5'>
+                    <ul className='grid grid-cols-1 grid-rows-none gap-4 md:grid-cols-12 md:grid-rows-3 lg:gap-4 xl:max-h-[34rem] xl:grid-rows-2 '>
+                        <GridItem
+                            area='md:[grid-area:1/1/2/7] xl:[grid-area:1/1/2/5]'
+                            icon={
+                                <BoxIcon className='h-4 w-4 text-black dark:text-neutral-400' />
+                            }
+                            title='Free & Simple'
+                            description="No sign-up required. Just paste your long URL and get a shortened link instantly. It's that simple!"
+                        />
+
+                        <GridItem
+                            area='md:[grid-area:1/7/2/13] xl:[grid-area:2/1/3/5]'
+                            icon={
+                                <CgCheckO className='h-4 w-4 text-black dark:text-neutral-400' />
+                            }
+                            title='Custom Short Codes'
+                            description='Create memorable links with your own custom short codes. Make your URLs both shorter and meaningful.'
+                        />
+
+                        <GridItem
+                            area='md:[grid-area:2/1/3/7] xl:[grid-area:1/5/3/8]'
+                            icon={
+                                <LockClosedIcon className='h-4 w-4 text-black dark:text-neutral-400' />
+                            }
+                            title='Secure & Reliable'
+                            description='Your links are safe with us. We use HTTPS encryption and maintain high availability for all shortened URLs.'
+                        />
+
+                        <GridItem
+                            area='md:[grid-area:2/7/3/13] xl:[grid-area:1/8/2/13]'
+                            icon={
+                                <FaHandSparkles className='h-4 w-4 text-black dark:text-neutral-400' />
+                            }
+                            title='Lightning Fast'
+                            description='Instant redirects and quick link generation. Your shortened URLs are ready to share in seconds.'
+                        />
+
+                        <GridItem
+                            area='md:[grid-area:3/1/4/13] xl:[grid-area:2/8/3/13]'
+                            icon={
+                                <MagnifyingGlassIcon className='h-4 w-4 text-black dark:text-neutral-400' />
+                            }
+                            title='No Hidden Limits'
+                            description='Create as many short links as you need. Our service is designed to be generous and user-friendly.'
+                        />
+                    </ul>
+                </div>
             </section>
 
             {showConfetti && (
@@ -233,3 +303,45 @@ export default function Home() {
         </main>
     );
 }
+interface GridItemProps {
+    area: string;
+    icon: React.ReactNode;
+    title: string;
+    description: React.ReactNode;
+}
+
+const GridItem = ({ area, icon, title, description }: GridItemProps) => {
+    return (
+        <li className={`min-h-[14rem] list-none ${area}`}>
+            <div className='relative h-full rounded-2.5xl border  p-2  md:rounded-3xl md:p-3'>
+                <GlowingEffect
+                    blur={0}
+                    borderWidth={3}
+                    spread={80}
+                    glow={true}
+                    disabled={false}
+                    proximity={64}
+                    inactiveZone={0.01}
+                />
+                <div className='relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-xl border-0.75 p-6  dark:shadow-[0px_0px_27px_0px_#2D2D2D] md:p-6'>
+                    <div className='relative flex flex-1 flex-col justify-between gap-3'>
+                        <div className='w-fit rounded-lg border border-gray-600 p-2 '>
+                            {icon}
+                        </div>
+                        <div className='space-y-3'>
+                            <h3 className='pt-0.5 text-xl/[1.375rem] font-semibold font-sans -tracking-4 md:text-2xl/[1.875rem] text-balance text-black dark:text-white'>
+                                {title}
+                            </h3>
+                            <h2
+                                className='[&_b]:md:font-semibold [&_strong]:md:font-semibold font-sans text-sm/[1.125rem] 
+              md:text-base/[1.375rem]  text-black dark:text-neutral-400'
+                            >
+                                {description}
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    );
+};
