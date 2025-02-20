@@ -48,6 +48,49 @@ const urlSchema = z.object({
 
 const MAX_RETRIES = 10;
 
+async function checkUrlSafety(url: string): Promise<boolean> {
+    const GOOGLE_SAFE_BROWSING_API_KEY =
+        process.env.GOOGLE_SAFE_BROWSING_API_KEY;
+    const safeBrowsingURL = `https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${GOOGLE_SAFE_BROWSING_API_KEY}`;
+
+    const requestBody = {
+        client: {
+            clientId: 'naturl',
+            clientVersion: '1.0',
+        },
+        threatInfo: {
+            threatTypes: [
+                'MALWARE',
+                'SOCIAL_ENGINEERING',
+                'UNWANTED_SOFTWARE',
+                'POTENTIALLY_HARMFUL_APPLICATION',
+                'THREAT_TYPE_UNSPECIFIED',
+            ],
+            platformTypes: ['ANY_PLATFORM'],
+            threatEntryTypes: ['URL'],
+            threatEntries: [{ url }],
+        },
+    };
+
+    try {
+        const response = await fetch(safeBrowsingURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Referer:
+                    process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+            },
+            body: JSON.stringify(requestBody),
+        });
+
+        const data = await response.json();
+        return !data.matches; // Return true if URL is safe (no matches)
+    } catch (error) {
+        console.error('Error checking URL safety:', error);
+        throw error;
+    }
+}
+
 export async function POST(request: Request) {
     const client = await getClient();
     try {
@@ -116,6 +159,18 @@ export async function POST(request: Request) {
                 );
             }
             throw error;
+        }
+
+        // After rate limit checks and before URL processing
+        const isSafe = await checkUrlSafety(url);
+        if (!isSafe) {
+            return createSecureResponse(
+                {
+                    success: false,
+                    error: 'This URL has been flagged as potentially unsafe and cannot be shortened.',
+                },
+                403
+            );
         }
 
         await client.query('BEGIN');
