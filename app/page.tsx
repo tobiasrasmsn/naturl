@@ -20,6 +20,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { GlowingEffect } from '@/components/ui/glowing-effect';
 import { RxCross2 } from 'react-icons/rx';
+import Ad from '@/components/shared/ad';
 
 export default function Home() {
     const [url, setUrl] = useState('');
@@ -300,6 +301,7 @@ export default function Home() {
                     />
                 </div>
             )}
+            <Ad />
         </main>
     );
 }
