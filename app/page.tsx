@@ -238,6 +238,18 @@ export default function Home() {
                     >
                         By using Naturl, you agree to our Terms of Service
                     </Link>
+                    <p className='text-amber-300 text-xs text-center bg-amber-900/20 p-2 rounded-lg border border-amber-900/40'>
+                        Help keep this free service running! Without community
+                        support <br />
+                        <Link
+                            href='https://buymeacoffee.com/tobiasr'
+                            target='_blank'
+                            className='text-blue-400 hover:text-blue-300 transition-colors'
+                        >
+                            through donations
+                        </Link>
+                        , we&apos;ll need to shut down by September 2025.
+                    </p>
                 </div>
             </section>
             <section className='w-full hidden lg:block'>
@@ -301,7 +313,6 @@ export default function Home() {
                     />
                 </div>
             )}
-            <Ad />
         </main>
     );
 }
