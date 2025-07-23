@@ -234,7 +234,7 @@ export default function Home() {
                     </form>
                     <Link
                         href='/terms'
-                        className='text-zinc-800 text-xs hover:text-zinc-200 transition-colors text-center'
+                        className='text-zinc-700 text-xs hover:text-zinc-200 transition-colors text-center'
                     >
                         By using Naturl, you agree to our Terms of Service
                     </Link>
