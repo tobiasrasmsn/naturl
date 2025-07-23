@@ -23,7 +23,7 @@
     "framer-motion": "^11.2.12",
     "limiter": "^2.1.0",
     "lucide-react": "^0.400.0",
-    "motion": "^11.15.0",
+    "motion": "^11.18.2",
     "next": "14.2.4",
     "next-themes": "^0.3.0",
     "pg": "^8.12.0",
