@@ -11,7 +11,7 @@ export default function Component() {
     const progressPercentage = (raised / goal) * 100;
 
     return (
-        <Card className='w-full fixed bottom-5 left-0 right-0 z-50 max-w-4xl mx-auto border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50'>
+        <Card className='w-full rounded-t-none md:rounded-t-lg fixed bottom-0 md:bottom-5 left-0 right-0 z-50 max-w-4xl mx-auto border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50'>
             <CardContent className='p-3'>
                 {/* Mobile Layout */}
                 <div className='flex flex-col gap-2 sm:hidden'>
