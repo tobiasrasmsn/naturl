@@ -134,7 +134,7 @@ export default function Home() {
         <main className='bg-zinc-950'>
             <section className='w-full h-[100dvh] min-h-[500px] flex flex-col justify-center items-center gap-5 '>
                 <div className='flex flex-col justify-center items-center gap-5 absolute z-30 px-4 sm:px-0'>
-                    {/* <Link
+                    <Link
                         href='https://buymeacoffee.com/tobiasr'
                         target='_blank'
                         className={cn(
@@ -147,7 +147,7 @@ export default function Home() {
                             </span>
                             <ArrowRightIcon className='ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5' />
                         </AnimatedShinyText>
-                    </Link> */}
+                    </Link>
                     <h1 className='text-[10vw] leading-[10vw] md:leading-[1] lg:leading-[1] md:text-4xl lg:text-5xl font-semibold text-center text-zinc-100'>
                         Naturally short, <br />
                         Perfectly linked.
@@ -236,45 +236,7 @@ export default function Home() {
                             </>
                         )}
                     </form>
-                    <div className='text-amber-300  shadow-xl shadow-amber-500/5 min-w-none max-w-[383.53px] text-xs text-left bg-gradient-to-tr from-amber-900/40 to-amber-900/20 p-2 rounded-lg border border-amber-900/40'>
-                        <p className='text-pretty'>
-                            Naturl is growing rapidly, and is becoming expensive
-                            to run. Help keep this free service running! Without
-                            community support{' '}
-                            <Link
-                                href='https://buymeacoffee.com/tobiasr'
-                                target='_blank'
-                                className='text-blue-400 hover:text-blue-300 transition-colors [text-shadow:0_0_8px_rgba(59,130,246,0.95)] hover:contrast-125'
-                            >
-                                through donations
-                            </Link>
-                            , we&apos;ll need to shut down by September 2025.
-                        </p>
-                        <div className='w-full mt-2'>
-                            <div className='w-full bg-zinc-700 rounded-full h-2'>
-                                <div
-                                    className='bg-amber-400 h-2 rounded-full'
-                                    style={{
-                                        width: `${progressPercentage}%`,
-                                    }}
-                                ></div>
-                            </div>
-                            <div className='flex justify-between mt-1'>
-                                <span className='font-medium text-amber-300'>
-                                    ${currentDonation} raised
-                                </span>
-                                <span className='font-medium text-zinc-400'>
-                                    ${totalDonation} goal
-                                </span>
-                            </div>
-                        </div>
-                        <p className='text-amber-300 text-xs text-left mt-2'>
-                            For alternative payment methods:{' '}
-                            <span className='text-blue-400 hover:text-blue-300 transition-colors [text-shadow:0_0_8px_rgba(59,130,246,0.95)] hover:contrast-125'>
-                                naturl@rasmussensolutions.no
-                            </span>
-                        </p>
-                    </div>
+
                     <Link
                         href='/terms'
                         className='text-zinc-400 text-xs hover:text-zinc-200 transition-colors text-center'

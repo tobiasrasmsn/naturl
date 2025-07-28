@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from 'next-themes';
 import Footer from '@/components/shared/Footer';
 import { Analytics } from '@vercel/analytics/react';
+import DonationBanner from '@/components/shared/donation-banner';
 const pjs = Plus_Jakarta_Sans({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -41,6 +42,7 @@ export default function RootLayout({
                     defaultTheme='dark'
                     disableTransitionOnChange
                 >
+                    <DonationBanner />
                     {children}
                     <Toaster richColors />
                     <Footer />
