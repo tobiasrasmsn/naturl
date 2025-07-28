@@ -11,12 +11,12 @@ export default function Component() {
     const progressPercentage = (raised / goal) * 100;
 
     return (
-        <Card className='w-full rounded-t-none md:rounded-t-lg fixed bottom-0 md:bottom-5 left-0 right-0 z-50 max-w-4xl mx-auto border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50'>
+        <Card className='w-full rounded-t-none md:rounded-t-lg fixed bottom-0 md:bottom-5 left-0 right-0 z-50 max-w-4xl mx-auto border-blue-200 bg-gradient-to-r from-blue-50 to-blue-50'>
             <CardContent className='p-3'>
                 {/* Mobile Layout */}
                 <div className='flex flex-col gap-2 sm:hidden'>
                     <div className='flex items-center gap-2'>
-                        <HeartFilledIcon className='w-4 h-4 text-amber-600 flex-shrink-0' />
+                        <HeartFilledIcon className='w-4 h-4 text-blue-600 flex-shrink-0' />
                         <span className='text-gray-700 text-sm'>
                             <strong>Naturl needs support!</strong> Without
                             donations, we&apos;ll shut down by September 2025.
@@ -37,7 +37,7 @@ export default function Component() {
                                 <PopoverTrigger>
                                     <Button
                                         size='sm'
-                                        className='bg-orange-300 hover:bg-orange-700 text-xs !py-2 !h-fit !text-white rounded-full'
+                                        className='bg-blue-300 hover:bg-blue-700 text-xs !py-2 !h-fit !text-white rounded-full'
                                     >
                                         Contact
                                     </Button>
@@ -54,7 +54,7 @@ export default function Component() {
                             <Button
                                 size='sm'
                                 asChild
-                                className='bg-orange-600 hover:bg-orange-700 text-xs !py-2 !h-fit !text-white rounded-full'
+                                className='bg-blue-600 hover:bg-blue-700 text-xs !py-2 !h-fit !text-white rounded-full'
                             >
                                 <Link
                                     href='https://buymeacoffee.com/tobiasr'
@@ -71,7 +71,7 @@ export default function Component() {
                 <div className='hidden sm:flex flex-col gap-3'>
                     <div className='flex items-center justify-between text-sm'>
                         <div className='flex items-center gap-2'>
-                            <HeartFilledIcon className='w-4 h-4 text-amber-600 flex-shrink-0' />
+                            <HeartFilledIcon className='w-5 h-5 text-blue-600 flex-shrink-0' />
                             <span className='text-gray-700'>
                                 <strong>Naturl needs support!</strong> Without
                                 donations, we&apos;ll shut down by September
@@ -83,7 +83,7 @@ export default function Component() {
                                 <PopoverTrigger>
                                     <Button
                                         size='sm'
-                                        className='bg-orange-300 hover:bg-orange-700 text-white rounded-full'
+                                        className='bg-blue-300 hover:bg-blue-700 text-white rounded-full'
                                     >
                                         Contact
                                     </Button>
@@ -100,7 +100,7 @@ export default function Component() {
                             <Button
                                 size='sm'
                                 asChild
-                                className='bg-orange-600 hover:bg-orange-700 text-white rounded-full'
+                                className='bg-blue-600 hover:bg-blue-700 text-white rounded-full'
                             >
                                 <Link
                                     href='https://buymeacoffee.com/tobiasr'
