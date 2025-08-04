@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans } from 'next/font/google';
+import { Arimo } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from 'next-themes';
 import Footer from '@/components/shared/Footer';
 import { Analytics } from '@vercel/analytics/react';
 import DonationBanner from '@/components/shared/donation-banner';
-const pjs = Plus_Jakarta_Sans({ subsets: ['latin'] });
+const pjs = Arimo({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
     metadataBase: new URL('https://www.naturl.link'),

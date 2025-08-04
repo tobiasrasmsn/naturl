@@ -25,14 +25,6 @@ function hashIP(ip: string): string {
         .digest('hex');
 }
 
-const globalLimiter = new RateLimiter({
-    tokensPerInterval: GLOBAL_LIMIT,
-    interval: 'minute',
-    fireImmediately: true,
-});
-
-const ipLimiters = new Map<string, RateLimiter>();
-
 const urlSchema = z.object({
     url: z.string().url().max(2000).transform(sanitizeUrl),
     shortCode: z
@@ -97,22 +89,28 @@ export async function POST(request: Request) {
         // Get IP address and hash it
         const ip = request.headers.get('x-forwarded-for') || 'unknown';
         const hashedIP = hashIP(ip);
-        const key = `ratelimit:${hashedIP}`;
+        const ipKey = `ratelimit_ip:${hashedIP}`;
+        const globalKey = 'ratelimit_global';
 
         // Check rate limit
-        const [requests] = await redis
+        const [ipRequests, globalRequests] = await redis
             .pipeline()
-            .incr(key)
-            .expire(key, WINDOW_SIZE)
+            .incr(ipKey)
+            .incr(globalKey)
             .exec();
 
-        // If first request, set expiry
-        if (requests === 1) {
-            await redis.expire(key, WINDOW_SIZE);
+        // If first request for IP, set expiry
+        if (ipRequests === 1) {
+            await redis.expire(ipKey, WINDOW_SIZE);
+        }
+
+        // If first request for global, set expiry
+        if (globalRequests === 1) {
+            await redis.expire(globalKey, WINDOW_SIZE);
         }
 
         // Check if rate limit exceeded
-        if (requests > IP_LIMIT) {
+        if (ipRequests > IP_LIMIT) {
             return createSecureResponse(
                 {
                     success: false,
@@ -122,8 +120,7 @@ export async function POST(request: Request) {
             );
         }
 
-        const remainingGlobalRequests = await globalLimiter.removeTokens(1);
-        if (remainingGlobalRequests < 0) {
+        if (globalRequests > GLOBAL_LIMIT) {
             return createSecureResponse(
                 {
                     success: false,
@@ -172,7 +169,15 @@ export async function POST(request: Request) {
                 403
             );
         }
-
+        if (url.includes('naturl.link')) {
+            return createSecureResponse(
+                {
+                    success: false,
+                    error: 'You cannot shorten a Naturl link.',
+                },
+                403
+            );
+        }
         await client.query('BEGIN');
 
         if (!isCustomShortCode) {

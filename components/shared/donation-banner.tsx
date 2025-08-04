@@ -11,15 +11,16 @@ export default function Component() {
     const progressPercentage = (raised / goal) * 100;
 
     return (
-        <Card className='w-full rounded-t-none md:rounded-t-lg fixed bottom-0 md:bottom-5 left-0 right-0 z-50 max-w-4xl mx-auto border-purple-200 bg-gradient-to-r from-purple-50 to-purple-50'>
+        <Card className='w-full rounded-none md:rounded-2xl fixed bottom-0 md:bottom-5 left-0 right-0 z-50 max-w-4xl mx-auto border-blue-200 bg-gradient-to-r from-blue-50 to-blue-50'>
             <CardContent className='p-3'>
                 {/* Mobile Layout */}
                 <div className='flex flex-col gap-2 sm:hidden'>
                     <div className='flex items-center gap-2'>
-                        <HeartFilledIcon className='w-4 h-4 text-purple-600 flex-shrink-0' />
+                        <HeartFilledIcon className='w-4 h-4 text-blue-600 flex-shrink-0' />
                         <span className='text-gray-700 text-sm'>
-                            <strong>Naturl needs support!</strong> Without
-                            donations, we&apos;ll shut down by September 2025.
+                            <strong>Naturl needs your support!</strong> Without
+                            donations, we&apos;ll need to shut down by September
+                            2025.
                         </span>
                     </div>
                     <div className='flex items-center justify-between gap-4'>
@@ -37,7 +38,7 @@ export default function Component() {
                                 <PopoverTrigger>
                                     <Button
                                         size='sm'
-                                        className='bg-purple-300 hover:bg-purple-700 text-xs !py-2 !h-fit !text-white rounded-full'
+                                        className='bg-blue-300 hover:bg-blue-700 text-xs !py-2 !h-fit !text-white rounded-full'
                                     >
                                         Contact
                                     </Button>
@@ -45,7 +46,7 @@ export default function Component() {
                                 <PopoverContent>
                                     <p>
                                         For alternative payment methods:{' '}
-                                        <span className='text-purple-400 hover:text-purple-300 transition-colors [text-shadow:0_0_8px_rgba(59,130,246,0.95)] hover:contrast-125'>
+                                        <span className='text-blue-400 hover:text-blue-300 transition-colors [text-shadow:0_0_8px_rgba(59,130,246,0.95)] hover:contrast-125'>
                                             naturl@rasmussensolutions.no
                                         </span>
                                     </p>
@@ -54,7 +55,7 @@ export default function Component() {
                             <Button
                                 size='sm'
                                 asChild
-                                className='bg-purple-600 hover:bg-purple-700 text-xs !py-2 !h-fit !text-white rounded-full'
+                                className='bg-blue-600 hover:bg-blue-700 text-xs !py-2 !h-fit !text-white rounded-full'
                             >
                                 <Link
                                     href='https://buymeacoffee.com/tobiasr'
@@ -71,11 +72,11 @@ export default function Component() {
                 <div className='hidden sm:flex flex-col gap-3'>
                     <div className='flex items-center justify-between text-sm'>
                         <div className='flex items-center gap-2'>
-                            <HeartFilledIcon className='w-5 h-5 text-purple-600 flex-shrink-0' />
+                            <HeartFilledIcon className='w-5 h-5 text-blue-600 flex-shrink-0' />
                             <span className='text-gray-700'>
-                                <strong>Naturl needs support!</strong> Without
-                                donations, we&apos;ll shut down by September
-                                2025.
+                                <strong>Naturl needs your support!</strong>{' '}
+                                Without donations, we&apos;ll need to shut down
+                                by September 2025.
                             </span>
                         </div>
                         <div className='flex items-center gap-3'>
@@ -83,7 +84,7 @@ export default function Component() {
                                 <PopoverTrigger>
                                     <Button
                                         size='sm'
-                                        className='bg-purple-300 hover:bg-purple-700 text-white rounded-full'
+                                        className='bg-blue-300 hover:bg-blue-700 text-white rounded-full'
                                     >
                                         Contact
                                     </Button>
@@ -91,7 +92,7 @@ export default function Component() {
                                 <PopoverContent>
                                     <p>
                                         For alternative payment methods:{' '}
-                                        <span className='text-purple-400 hover:text-purple-300 transition-colors [text-shadow:0_0_8px_rgba(59,130,246,0.95)] hover:contrast-125'>
+                                        <span className='text-blue-400 hover:text-blue-300 transition-colors [text-shadow:0_0_8px_rgba(59,130,246,0.95)] hover:contrast-125'>
                                             naturl@rasmussensolutions.no
                                         </span>
                                     </p>
@@ -100,7 +101,7 @@ export default function Component() {
                             <Button
                                 size='sm'
                                 asChild
-                                className='bg-purple-600 hover:bg-purple-700 text-white rounded-full'
+                                className='bg-blue-600 hover:bg-blue-700 text-white rounded-full'
                             >
                                 <Link
                                     href='https://buymeacoffee.com/tobiasr'
