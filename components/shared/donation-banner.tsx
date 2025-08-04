@@ -6,7 +6,7 @@ import { HeartFilledIcon } from '@radix-ui/react-icons';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 export default function Component() {
-    const raised = 70;
+    const raised = 75;
     const goal = 300;
     const progressPercentage = (raised / goal) * 100;
 
