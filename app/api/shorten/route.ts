@@ -44,7 +44,6 @@ async function checkUrlSafety(url: string): Promise<boolean> {
     const GOOGLE_SAFE_BROWSING_API_KEY =
         process.env.GOOGLE_SAFE_BROWSING_API_KEY;
     const safeBrowsingURL = `https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${GOOGLE_SAFE_BROWSING_API_KEY}`;
-
     const requestBody = {
         client: {
             clientId: 'naturl',
@@ -292,7 +291,7 @@ export async function POST(request: Request) {
 function generateUniqueCode(): string {
     const characters =
         'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    const codeLength = 6;
+    const codeLength = 7;
     let result = '';
     for (let i = 0; i < codeLength; i++) {
         result += characters.charAt(

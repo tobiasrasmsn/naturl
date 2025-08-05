@@ -44,8 +44,7 @@ export default function RootLayout({
                 >
                     <DonationBanner />
                     {children}
-                    <Toaster richColors />
-                    <Footer />
+                    <Toaster />
                     <Analytics />
                 </ThemeProvider>
             </body>

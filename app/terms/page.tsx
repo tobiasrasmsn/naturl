@@ -1,8 +1,16 @@
+import Link from 'next/link';
+
 export default function Terms() {
     return (
         <div className='w-full h-full flex flex-col items-center justify-center bg-zinc-950'>
-            <div className='max-w-3xl p-6 text-zinc-200'>
-                <h1 className='text-3xl font-bold mb-6'>
+            <div className='max-w-3xl py-24 pb-32 p-6 text-zinc-200'>
+                <Link
+                    href='/'
+                    className='text-zinc-200 bg-gradient-to-tr from-blue-600 to-blue-500 hover:contrast-150 transition-all duration-300 shadow-inner shadow-blue-300/35  px-4 py-2 rounded-full'
+                >
+                    Back to Home
+                </Link>
+                <h1 className='text-3xl font-bold mb-6 mt-6'>
                     Terms of Service for Naturl
                 </h1>
                 <p className='text-sm mb-4'>

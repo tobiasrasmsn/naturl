@@ -30,6 +30,7 @@ import Image from 'next/image';
 import { GlowingEffect } from '@/components/ui/glowing-effect';
 import { RxCross2 } from 'react-icons/rx';
 import Ad from '@/components/shared/ad';
+import StatsBadge from '@/components/shared/StatsBadge';
 import { v4 as uuidv4 } from 'uuid';
 
 interface Idea {
@@ -55,6 +56,8 @@ export default function Home() {
     const [votedIdeas, setVotedIdeas] = useState<{
         [key: number]: 'upvote' | 'downvote';
     }>({});
+    const [urlCount, setUrlCount] = useState<number | null>(null);
+    const [isCountLoading, setIsCountLoading] = useState(true);
 
     useEffect(() => {
         let storedAuthorId = localStorage.getItem('authorId');
@@ -77,6 +80,20 @@ export default function Home() {
         };
 
         fetchIdeas();
+
+        const fetchStats = async () => {
+            try {
+                const response = await fetch('/api/stats');
+                const data = await response.json();
+                setUrlCount(data.count);
+            } catch (error) {
+                console.error('Failed to fetch stats', error);
+            } finally {
+                setIsCountLoading(false);
+            }
+        };
+
+        fetchStats();
     }, []);
 
     const handleVote = async (
@@ -194,11 +211,24 @@ export default function Home() {
             console.log('Response data:', data);
 
             if (data.success) {
+                if (
+                    !data.message ||
+                    !data.message.includes('already created')
+                ) {
+                    setUrlCount((prevCount) =>
+                        prevCount !== null ? prevCount + 1 : 1
+                    );
+                }
                 const shortUrl = `${window.location.origin}/${data.shortCode}`;
                 setCurrentShortUrl(shortUrl);
                 setShowConfetti(true);
-                await navigator.clipboard.writeText(shortUrl);
-                toast.success('Copied to clipboard');
+                try {
+                    await navigator.clipboard.writeText(shortUrl);
+                    toast.success('Copied to clipboard');
+                } catch (err) {
+                    console.error('Failed to copy to clipboard', err);
+                    toast.error('Could not copy to clipboard');
+                }
                 setTimeout(() => setShowConfetti(false), 5000);
             } else {
                 if (response.status === 429) {
@@ -263,7 +293,7 @@ export default function Home() {
                     />
                 </div>
                 <div className='flex flex-col justify-center items-center gap-5 absolute z-30 px-4 sm:px-0'>
-                    <Link
+                    {/*<Link
                         href='https://buymeacoffee.com/tobiasr'
                         target='_blank'
                         className={cn(
@@ -276,7 +306,8 @@ export default function Home() {
                             </span>
                             <ArrowRightIcon className='ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5' />
                         </AnimatedShinyText>
-                    </Link>
+                    </Link>*/}
+                    <StatsBadge count={urlCount} loading={isCountLoading} />
                     <h1 className='text-[11.5vw] leading-[11.5vw] md:leading-[1] lg:leading-[1] md:text-5xl lg:text-[3.25rem] font-semibold text-center text-zinc-100'>
                         Naturally short, <br />
                         Perfectly linked.
@@ -315,7 +346,7 @@ export default function Home() {
                         ) : (
                             <>
                                 {step === 1 ? (
-                                    <div className='w-full sm:w-[400px] rounded-full group focus-within:border-zinc-700 focus-within:bg-zinc-900 shadow-inner shadow-zinc-400/10 transition-all duration-300 bg-zinc-900/40 backdrop-blur-sm border border-zinc-800 flex flex-row items-center gap-2 p-2'>
+                                    <div className='w-full sm:w-[400px] rounded-full group focus-within:border-zinc-700/60 focus-within:bg-zinc-900 shadow-inner shadow-zinc-400/10 transition-all duration-300 bg-zinc-900/40 backdrop-blur-sm border border-zinc-800 flex flex-row items-center gap-2 p-2'>
                                         <input
                                             type='url'
                                             placeholder='Long URL here...'
