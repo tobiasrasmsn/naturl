@@ -227,7 +227,6 @@ export default function Home() {
                     toast.success('Copied to clipboard');
                 } catch (err) {
                     console.error('Failed to copy to clipboard', err);
-                    toast.error('Could not copy to clipboard');
                 }
                 setTimeout(() => setShowConfetti(false), 5000);
             } else {

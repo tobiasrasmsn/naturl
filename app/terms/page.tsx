@@ -36,9 +36,29 @@ export default function Terms() {
                     or a randomly generated one. No signup is required, and the
                     Service is available to all users at no cost.
                 </p>
+                <h2 className='text-xl font-semibold mt-6 mb-3'>
+                    3. Security and Abuse Prevention
+                </h2>
+                <p className='mb-4'>
+                    To protect our users and maintain the integrity of our
+                    Service, we take the following security measures:
+                </p>
+                <ul className='list-disc pl-6 mb-4 space-y-2'>
+                    <li>
+                        All submitted URLs are automatically checked against
+                        Google Safe Browsing APIs to identify and block
+                        potentially malicious links, including those associated
+                        with phishing, malware, or unwanted software.
+                    </li>
+                    <li>
+                        We implement IP-based rate limiting to prevent spam and
+                        abuse of our Service. This helps ensure fair usage and
+                        availability for all users.
+                    </li>
+                </ul>
 
                 <h2 className='text-xl font-semibold mt-6 mb-3'>
-                    3. User Responsibilities
+                    4. User Responsibilities
                 </h2>
                 <p className='mb-2'>When using the Service, you agree to:</p>
                 <ul className='list-disc pl-6 mb-4 space-y-2'>
@@ -59,7 +79,7 @@ export default function Terms() {
                 </ul>
 
                 <h2 className='text-xl font-semibold mt-6 mb-3'>
-                    4. Prohibited Uses
+                    5. Prohibited Uses
                 </h2>
                 <p className='mb-2'>You may not use the Service to:</p>
                 <ul className='list-disc pl-6 mb-4 space-y-2'>
@@ -82,7 +102,7 @@ export default function Terms() {
                 </ul>
 
                 <h2 className='text-xl font-semibold mt-6 mb-3'>
-                    5. Disclaimer of Liability
+                    6. Disclaimer of Liability
                 </h2>
                 <p className='mb-4'>
                     We do not monitor, verify, or endorse the content of URLs
@@ -102,7 +122,7 @@ export default function Terms() {
                 </ul>
 
                 <h2 className='text-xl font-semibold mt-6 mb-3'>
-                    6. Limitation of Liability
+                    7. Limitation of Liability
                 </h2>
                 <p className='mb-4'>
                     To the fullest extent permitted by law, Naturl and its
@@ -112,7 +132,7 @@ export default function Terms() {
                 </p>
 
                 <h2 className='text-xl font-semibold mt-6 mb-3'>
-                    7. Termination of Service
+                    8. Termination of Service
                 </h2>
                 <p className='mb-4'>
                     We reserve the right to modify, suspend, or terminate the
@@ -122,7 +142,7 @@ export default function Terms() {
                 </p>
 
                 <h2 className='text-xl font-semibold mt-6 mb-3'>
-                    8. Modifications to Terms
+                    9. Modifications to Terms
                 </h2>
                 <p className='mb-4'>
                     We reserve the right to update or modify these Terms of
@@ -133,7 +153,7 @@ export default function Terms() {
                 </p>
 
                 <h2 className='text-xl font-semibold mt-6 mb-3'>
-                    9. Governing Law
+                    10. Governing Law
                 </h2>
                 <p className='mb-4'>
                     These Terms of Service are governed by and construed in
